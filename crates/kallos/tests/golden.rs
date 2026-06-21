@@ -388,3 +388,21 @@ fn fresh_comment_inline_block() {
     // separate body lines; the true in-place `Inline` role is a reserved seam.
     golden("p :- a, %* b *% c.", 100, "p :-\n    a, %* b *%\n    c.\n");
 }
+
+// ----- relation operators: the explicit-equality `==` and angle not-equal `<>` -----
+
+#[test]
+fn fresh_relation_explicit_equality_eqeq() {
+    // [width 100] `==` is a comparison `relation` clingo accepts (the explicit spelling
+    // of equality alongside `=`): spaced both sides like its siblings and preserved
+    // VERBATIM — never normalized to `=`, a distinct surface token. The de-housed input
+    // proves the formatter both parses `==` and spaces it.
+    golden(":-1==1.", 100, ":- 1 == 1.\n");
+}
+
+#[test]
+fn fresh_relation_angle_not_equal_ltgt() {
+    // [width 100] `<>` is the angle spelling of not-equal clingo accepts (alongside `!=`):
+    // a `relation`, spaced both sides and preserved VERBATIM — never normalized to `!=`.
+    golden(":-1<>2.", 100, ":- 1 <> 2.\n");
+}

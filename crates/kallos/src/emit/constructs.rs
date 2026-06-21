@@ -2191,6 +2191,22 @@ mod tests {
     }
 
     #[test]
+    fn eq_eq_relation_is_spaced_and_preserved() {
+        // `==` (clingo's explicit-equality spelling) is a `relation`: spaced both sides
+        // and preserved verbatim, NOT normalized to `=`.
+        let out = fmt("a :- X==Y.\n", 100);
+        assert_eq!(out, "a :- X == Y.");
+    }
+
+    #[test]
+    fn angle_not_equal_relation_is_spaced_and_preserved() {
+        // `<>` (clingo's angle not-equal spelling) is a `relation`: spaced both sides
+        // and preserved verbatim, NOT normalized to `!=`.
+        let out = fmt("a :- X<>Y.\n", 100);
+        assert_eq!(out, "a :- X <> Y.");
+    }
+
+    #[test]
     fn default_negation_is_spaced_from_its_atom() {
         // `not` is always spaced from the following atom (lest `not p` fuse to
         // `notp`); the extra authored space is normalized to one.

@@ -128,6 +128,8 @@ fn differential_edge_seeds() {
         ("cond_neg_guard", "p :- q(X) : -r(X).\n"),
         ("theory_op_run", "&sum { x } >= 1 + 2.\n"),
         ("double_negation", "q :- not not p.\n"),
+        ("relation_eqeq", "q(X) :- p(X), X == 1.\n"),
+        ("relation_ltgt", "q(X) :- p(X), X <> 1.\n"),
     ];
     let mut checked = 0;
     for (label, src) in seeds {

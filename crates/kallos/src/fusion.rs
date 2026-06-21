@@ -18,8 +18,8 @@
 //!   by its tree-sitter *node kind*, never by raw glyph. In theory context an operator
 //!   run such as `:=` arrives pre-grouped as one greedy `theory_operator` node
 //!   (grammar.js:420-430) → [`Class::TheoryOp`] → arm [1]; so the `Colon`/`Relation`
-//!   arms never see theory glyphs, and there is no non-theory `:=`/`==` token (relations
-//!   are exactly `> < >= <= = !=`, 501). Soundness rests on this — the emitter must honor it.
+//!   arms never see theory glyphs, and there is no non-theory `:=` token (relations
+//!   are exactly `> < >= <= = == != <>`, 501). Soundness rests on this — the emitter must honor it.
 //! - **Theory-operator munch boundary (lifted).** Arm [1] is char-class-precise: a theory
 //!   operator fuses with a neighbor iff the neighbor's FACING char is in the greedy munch
 //!   set [`is_theory_op_char`] (the union of the four `theory_operator` alternatives,
@@ -79,7 +79,7 @@ pub(crate) enum Class {
         not(test),
         expect(dead_code, reason = "tok_of is partial; see type doc")
     )]
-    Relation, // = != < > <= >= — fixed token (501); sits between terms (504)
+    Relation, // = == != <> < > <= >= — fixed token (501); sits between terms (504)
     Colon,  // the external `:` token (33) — forms the necks :- / :~
     HardPunct, // ( ) { } [ ] , ; | @ and the statement `.` — non-extensible
 }
