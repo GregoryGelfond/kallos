@@ -1,0 +1,20 @@
+*.a
+*.egg-info
+*.log
+*.o
+*.pc
+*.so
+*.wasm
+/target/
+build
+dist
+example*
+node_modules
+
+# Emacs
+*~
+\#*\#
+*.elc
+auto-save-list
+tramp
+.\#*

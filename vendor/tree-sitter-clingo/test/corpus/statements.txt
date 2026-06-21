@@ -1,0 +1,601 @@
+==================
+comments
+==================
+
+% foo
+%* 
+ * bar
+ *%
+
+---
+
+(source_file
+  (line_comment)
+  (block_comment))
+
+==================
+line comments
+==================
+
+%
+% xyz
+%  
+%
+%
+
+---
+
+(source_file
+  (line_comment)
+  (line_comment)
+  (line_comment)
+  (line_comment)
+  (line_comment))
+
+==================
+rules
+==================
+
+head.
+head :-  body.
+
+---
+
+(source_file
+  (rule
+    head: (literal
+      atom: (symbolic_atom
+        name: (identifier))))
+  (rule
+    head: (literal
+      atom: (symbolic_atom
+        name: (identifier)))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier))))))
+
+==================
+rule error double arrow
+:error
+==================
+
+head :- body :- body.
+
+---
+
+==================
+constraints
+==================
+
+:- body.
+:- .
+
+---
+
+(source_file
+  (integrity_constraint
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)))))
+  (integrity_constraint))
+
+==================
+weak constraint
+==================
+
+:~ a, b. [1@2,1,2,3]
+:~ . [0]
+
+---
+
+(source_file
+  (weak_constraint
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)))
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier))))
+    weight: (weight
+      term: (number)
+      priority: (number))
+    terms: (terms
+      (number)
+      (number)
+      (number)))
+  (weak_constraint
+    weight: (weight
+      term: (number))))
+
+==================
+minimize
+==================
+
+#minimize{ 1@3: a; 1: b; 2,3: b,c  }.
+
+---
+
+(source_file
+  (minimize
+    elements: (optimize_elements
+      (optimize_element
+        weight: (weight
+          term: (number)
+          priority: (number))
+        condition: (condition
+          (literal
+            atom: (symbolic_atom
+              name: (identifier)))))
+      (optimize_element
+        weight: (weight
+          term: (number))
+        condition: (condition
+          (literal
+            atom: (symbolic_atom
+              name: (identifier)))))
+      (optimize_element
+        weight: (weight
+          term: (number))
+        terms: (terms
+          (number))
+        condition: (condition
+          (literal
+            atom: (symbolic_atom
+              name: (identifier)))
+          (literal
+            atom: (symbolic_atom
+              name: (identifier))))))))
+
+==================
+maximize
+==================
+
+#maximize{ }.
+
+---
+
+(source_file
+  (maximize))
+
+==================
+show
+==================
+
+#show.
+#show a/2.
+#show -a/2.
+#show a/2+1.
+#show -a/2+1.
+#show -p(X) : q(), c(X).
+#show a.
+#show a/2. [true]
+#show a/2. [false]
+
+---
+
+(source_file
+  (show)
+  (show_signature
+    signature: (signature
+      name: (identifier)
+      arity: (number)))
+  (show_signature
+    signature: (signature
+      sign: (classical_negation)
+      name: (identifier)
+      arity: (number)))
+  (show_term
+    term: (binary_operation
+      left: (binary_operation
+        left: (function
+          name: (identifier))
+        right: (number))
+      right: (number)))
+  (show_term
+    term: (binary_operation
+      left: (binary_operation
+        left: (unary_operation
+          right: (function
+            name: (identifier)))
+        right: (number))
+      right: (number)))
+  (show_term
+    term: (unary_operation
+      right: (function
+        name: (identifier)
+        arguments: (terms
+          (variable))))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)))
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)
+          arguments: (terms
+            (variable))))))
+  (show_term
+    term: (function
+      name: (identifier)))
+  (show_signature
+    signature: (signature
+      name: (identifier)
+      arity: (number))
+    value: (boolean))
+  (show_signature
+    signature: (signature
+      name: (identifier)
+      arity: (number))
+    value: (boolean)))
+==================
+single show
+==================
+
+#show a/0.
+
+---
+
+(source_file
+    (show_signature
+    (signature
+        (identifier)
+        (number))))
+
+==================
+defined
+==================
+
+#defined a/2.
+#defined -a/2.
+
+---
+
+(source_file
+  (defined
+    signature: (signature
+      name: (identifier)
+      arity: (number)))
+  (defined
+    signature: (signature
+      sign: (classical_negation)
+      name: (identifier)
+      arity: (number))))
+
+==================
+project
+==================
+
+#project a/2.
+#project -a/2.
+#project a.
+#project a : .
+#project a : b.
+
+---
+
+(source_file
+  (project_signature
+    signature: (signature
+      name: (identifier)
+      arity: (number)))
+  (project_signature
+    signature: (signature
+      sign: (classical_negation)
+      name: (identifier)
+      arity: (number)))
+  (project_atom
+    atom: (symbolic_atom
+      name: (identifier)))
+  (project_atom
+    atom: (symbolic_atom
+      name: (identifier)))
+  (project_atom
+    atom: (symbolic_atom
+      name: (identifier))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier))))))
+
+==================
+const
+==================
+
+#const x = 1.
+#const x = f().
+#const x = f((), |x|).
+#const x = 1. [default]
+#const x = 2. [override]
+
+---
+
+(source_file
+  (const
+    name: (identifier)
+    value: (number))
+  (const
+    name: (identifier)
+    value: (function
+      name: (identifier)))
+  (const
+    name: (identifier)
+    value: (function
+      name: (identifier)
+      arguments: (terms
+        (tuple)
+        (abs
+          (function
+            name: (identifier))))))
+  (const
+    name: (identifier)
+    value: (number)
+    type: (const_type))
+  (const
+    name: (identifier)
+    value: (number)
+    type: (const_type)))
+
+==================
+script
+==================
+
+#script (python)
+
+def main(ctl):
+  ctl.ground()
+
+#end.
+
+---
+
+(source_file
+  (script
+    language: (identifier)
+    code: (code)))
+
+==================
+include
+==================
+
+#include "a".
+#include <b>.
+
+---
+
+(source_file
+  (include
+    (string
+      (string_fragment)))
+  (include
+    (identifier)))
+
+==================
+program
+==================
+
+#program base.
+#program base().
+#program acid(a, b).
+
+---
+
+(source_file
+  (program
+    name: (identifier))
+  (program
+    name: (identifier))
+  (program
+    name: (identifier)
+    parameters: (parameters
+      (identifier)
+      (identifier))))
+
+==================
+external
+==================
+
+#external a.
+#external -a.
+#external a : b.
+#external a: .
+#external a(X) : p(B). [X]
+
+---
+
+(source_file
+  (external
+    atom: (symbolic_atom
+      name: (identifier)))
+  (external
+    atom: (symbolic_atom
+      sign: (classical_negation)
+      name: (identifier)))
+  (external
+    atom: (symbolic_atom
+      name: (identifier))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)))))
+  (external
+    atom: (symbolic_atom
+      name: (identifier)))
+  (external
+    atom: (symbolic_atom
+      name: (identifier)
+      arguments: (terms
+        (variable)))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)
+          arguments: (terms
+            (variable)))))
+    type: (variable)))
+
+==================
+edge
+==================
+
+#edge (a,b).
+#edge (a,b; b, c).
+#edge (a,b; b, c) : q.
+
+---
+
+(source_file
+  (edge
+    edge_pair: (edge_pair
+      (function
+        name: (identifier))
+      (function
+        name: (identifier))))
+  (edge
+    edge_pair: (edge_pair
+      (function
+        name: (identifier))
+      (function
+        name: (identifier)))
+    edge_pair: (edge_pair
+      (function
+        name: (identifier))
+      (function
+        name: (identifier))))
+  (edge
+    edge_pair: (edge_pair
+      (function
+        name: (identifier))
+      (function
+        name: (identifier)))
+    edge_pair: (edge_pair
+      (function
+        name: (identifier))
+      (function
+        name: (identifier)))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier))))))
+
+==================
+heuristic
+==================
+
+#heuristic a(). [true,blub]
+#heuristic -a(). [true@10,blub]
+#heuristic a(X) : q(X). [true@X,blub(X)]
+
+---
+
+(source_file
+  (heuristic
+    atom: (symbolic_atom
+      name: (identifier))
+    weight: (weight
+      term: (function
+        name: (identifier)))
+    type: (function
+      name: (identifier)))
+  (heuristic
+    atom: (symbolic_atom
+      sign: (classical_negation)
+      name: (identifier))
+    weight: (weight
+      term: (function
+        name: (identifier))
+      priority: (number))
+    type: (function
+      name: (identifier)))
+  (heuristic
+    atom: (symbolic_atom
+      name: (identifier)
+      arguments: (terms
+        (variable)))
+    body: (body
+      (body_literal
+        atom: (symbolic_atom
+          name: (identifier)
+          arguments: (terms
+            (variable)))))
+    weight: (weight
+      term: (function
+        name: (identifier))
+      priority: (variable))
+    type: (function
+      name: (identifier)
+      arguments: (terms
+        (variable)))))
+
+==================
+doc comments
+==================
+
+%*! some_predicate (A, B ,C )
+Here is `some` documentation for the predicate.
+
+Maybe a *longer* one
+over _multiple_ lines
+
+Args:
+- A: **some** description for *A*
+     maybe also over _multiple_ lines?
+- B  : some description for B
+- C: some description for C
+- D:
+*%
+
+%*! some_predicate
+
+brief
+
+Args:
+
+*%
+
+---
+
+(source_file
+  (doc_comment
+    (doc_predicate
+      (identifier)
+      (variables
+        (variable)
+        (variable)
+        (variable)))
+    (doc_desc
+      (doc_fragment_string)
+      (doc_fragment_code)
+      (doc_fragment_string)
+      (doc_fragment_emph)
+      (doc_fragment_string)
+      (doc_fragment_italic)
+      (doc_fragment_string))
+    (doc_args
+      (doc_arg
+        (variable)
+        (doc_desc
+          (doc_fragment_bold)
+          (doc_fragment_string)
+          (doc_fragment_emph)
+          (doc_fragment_string)
+          (doc_fragment_italic)
+          (doc_fragment_string)))
+      (doc_arg
+        (variable)
+        (doc_desc
+          (doc_fragment_string)))
+      (doc_arg
+        (variable)
+        (doc_desc
+          (doc_fragment_string)))
+      (doc_arg
+        (variable))))
+  (doc_comment
+    (doc_predicate
+      (identifier))
+    (doc_desc
+      (doc_fragment_string))
+    (doc_args)))
