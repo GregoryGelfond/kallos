@@ -1,0 +1,13 @@
+# Give libtest's per-test threads a generous stack. The arbitrary-input totality
+# proptests (`equiv::tests::*_is_total_on_arbitrary_input`) can occasionally
+# generate a pathological short string that drives tree-sitter's (C) parser to
+# recurse past libtest's 2 MiB default thread stack on some platforms.
+#
+# This does NOT weaken the stack-safety tests: the formatter's own walks are
+# iterative, proven by the `run_on_tiny_stack` tests, which set an explicit
+# 512 KiB `stack_size` (explicit `stack_size` takes precedence over RUST_MIN_STACK,
+# so those threads stay at 512 KiB). RUST_MIN_STACK only affects spawned threads
+# that set no size of their own — here, libtest's. The shipped binary is
+# single-threaded, so it is unaffected.
+[env]
+RUST_MIN_STACK = "16777216"  # 16 MiB

@@ -1,0 +1,6 @@
+# Strict, pinned rustfmt style. Stable-only options
+# (no nightly required); add nightly-only refinements later if desired.
+max_width = 100
+edition = "2021"
+newline_style = "Unix"
+use_field_init_shorthand = true

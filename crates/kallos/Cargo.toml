@@ -1,0 +1,40 @@
+[package]
+name = "kallos"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "A pure-layout, opinionated source formatter for ASP/clingo (.lp)."
+keywords = ["asp", "clingo", "formatter", "answer-set", "pretty-print"]
+categories = ["development-tools", "text-processing"]
+
+[dependencies]
+tree-sitter.workspace = true
+tree-sitter-clingo.workspace = true
+unicode-width.workspace = true
+rustc-hash.workspace = true
+doc = { package = "kallos-doc", path = "../kallos-doc" }
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+
+[features]
+# Test-only: enables the clingo differential test. It shells out to the
+# pyclingo oracle (`tests/differential/canonical.py`) via the pixi env, so it needs
+# pixi + clingo present; OFF by default so `cargo test` stays green without them. Run:
+# `pixi run differential`. The shipped core links no libclingo and bundles no Python.
+differential = []
+
+[[test]]
+name = "differential"
+required-features = ["differential"]
+
+[[bench]]
+name = "pipeline"
+harness = false
+
+[lints]
+workspace = true

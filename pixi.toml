@@ -1,0 +1,18 @@
+[project]
+name = "kallos"
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "osx-64", "linux-64"]
+
+[dependencies]
+# The differential-test oracle: the clingo binary and pyclingo (clingo.ast),
+# test-only. The shipped Rust core stays libclingo-free.
+clingo = "5.8.0.*"
+python = ">=3.11"
+
+[tasks]
+# Differential-test canonical-form helper: clingo's canonical AST view of a program on
+# stdin (the authority the tree-sitter `≈` proxy is validated against).
+canonical = "python tests/differential/canonical.py"
+# The gated clingo differential test. Runs under the pixi env so the Rust test's
+# `python` resolves to pyclingo. The shipped core stays libclingo-free.
+differential = "cargo test -p kallos --features differential --test differential -- --nocapture"

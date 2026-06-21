@@ -1,0 +1,36 @@
+[workspace]
+resolver = "2"
+# The vendored tree-sitter grammar, the pretty-printing engine (kallos-doc), the
+# formatter library (kallos), and the command-line interface (kallos-cli).
+members = ["vendor/tree-sitter-clingo", "crates/kallos-doc", "crates/kallos", "crates/kallos-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.96.0"
+license = "MIT"
+repository = "https://github.com/GregoryGelfond/kallos"
+authors = ["Gregory Gelfond"]
+
+[workspace.dependencies]
+tree-sitter = "0.25"
+tree-sitter-clingo = { path = "vendor/tree-sitter-clingo" }
+unicode-width = "0.2"
+rustc-hash = "2"
+clap = { version = "4", features = ["derive"] }
+ignore = "0.4"
+similar = "2"
+anyhow = "1"
+proptest = "1"
+criterion = "0.5"
+tempfile = "3"
+
+# Quality gates, enforced at the manifest level (not just in CI). Our
+# crates opt in via `[lints] workspace = true`; the vendored grammar does NOT.
+[workspace.lints.rust]
+unsafe_code = "deny"
+missing_debug_implementations = "warn"
+
+[workspace.lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }

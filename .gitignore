@@ -1,0 +1,16 @@
+# Rust build output
+/target/
+
+# pixi environment (pixi.lock is committed; the env is not)
+/.pixi/
+
+# direnv
+/.direnv/
+
+# macOS
+.DS_Store
+
+# cargo-fuzz
+/fuzz/target/
+/fuzz/corpus/
+/fuzz/artifacts/

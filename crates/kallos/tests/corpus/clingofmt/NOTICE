@@ -1,0 +1,38 @@
+kallos/tests/corpus/clingofmt/ — corpus INPUTS only.
+
+Source:   https://github.com/potassco/clingofmt
+Revision: c52fba46c6f4b6b7d7dce27325fc8502b516498f  (branch main HEAD, fetched 2026-06-20)
+License:  MIT (Copyright (c) 2021 Sven Thiele / Potassco). See the upstream LICENSE.
+Use:      INPUT programs harvested for the idempotence + `≈` property runner
+          (tests/corpus.rs) and the clingo differential test (tests/differential.rs).
+          clingofmt's emitter/output STYLE is NOT used or reproduced here — these are
+          inputs we re-format with OUR house style and validate against clingo, not
+          against clingofmt's golden output.
+
+Provenance of the count (no silent assumption):
+  At this revision clingofmt keeps exactly ONE `.lp` file on disk (`example.lp`); its
+  test corpus is otherwise embedded as 17 inline (input, expected-output) cases in
+  `src/tests.rs`:
+    - test_pass_new        : 11 cases   -> pn01..pn11 here
+    - test_include_section :  5 cases   -> inc1..inc5 here
+    - test_pass_old        :  1 case    == example.lp (the repo's only `.lp` file)
+  We harvested the 17 case INPUTS (the `source` argument / first string of each pair),
+  NEVER the `result`/expected-output (golden) strings. pn01..pn11 and inc1..inc5 are
+  transcribed from those inline input literals (escapes decoded, raw strings verbatim);
+  example.lp is byte-identical to the test_pass_old input.
+
+  COMMITTED: 17 of 17 inputs (pn01..pn11, inc1..inc5, example.lp) — each verified
+  idempotent AND `≈`-safe AND parseable under the vendored grammar at
+  width 100.
+
+  example.lp / the test_pass_old input is the deliberately-adversarial comment-torture
+  rule (the `bla ... #sum { ... }` rule, with `%aa`/`%bb` comments scattered between
+  EVERY token mid-aggregate). It surfaced a whole CLASS of comment-transposition `≈`-bug:
+  a pending own-line comment that preceded a FOLLOWING token carrying a trailing comment
+  was emitted AFTER that trailing comment (the pair reordered). The fix closed the `,`/`;`
+  SEPARATOR facet first, then the rest of the class — the comment now leads ANY
+  following token (the `:-`/`:~`/`:` necks, the `{`/`(`/`[` openers, the `=`/`@` infixes;
+  the dual-purpose `|` is the sole carve-out). That single classifier change also
+  resolved the coupled non-idempotence (a nested aggregate element's comment had drifted
+  indent across reformat, driven by the mis-attached neck comments above it).
+  example.lp is now fully `≈`-safe and idempotent at width 100, so it is admitted.

@@ -1,0 +1,38 @@
+[package]
+name = "kallos-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "Command-line interface for kallos, a pure-layout formatter for ASP/clingo (.lp)."
+keywords = ["asp", "clingo", "formatter", "answer-set", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "kallos"
+path = "src/main.rs"
+# The binary is a thin shim (parse args → `kallos_cli::run` → exit code); its rustdoc
+# target is `kallos`, which collides with the `kallos` LIBRARY crate's docs
+# (`cargo doc` output-filename collision at `target/doc/kallos/`). The CLI's
+# documented surface is the `kallos_cli` library below, so the shim opts out of docs.
+doc = false
+
+[lib]
+name = "kallos_cli"
+path = "src/lib.rs"
+
+[dependencies]
+kallos = { path = "../kallos" }
+clap = { workspace = true }
+ignore = { workspace = true }
+similar = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+# Real-filesystem tests (temp dirs).
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

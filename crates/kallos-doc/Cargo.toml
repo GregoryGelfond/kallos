@@ -1,0 +1,24 @@
+[package]
+name = "kallos-doc"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+description = "A small strict Wadler/Lindig pretty-printing engine (the kallos Doc engine)."
+keywords = ["pretty-print", "wadler", "layout", "formatter"]
+categories = ["development-tools", "text-processing"]
+
+[dependencies]
+unicode-width.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+
+[[bench]]
+name = "render_linearity"
+harness = false
+
+[lints]
+workspace = true
