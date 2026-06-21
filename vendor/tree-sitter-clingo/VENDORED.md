@@ -4,11 +4,10 @@
 - **Revision:** `b701815f985ca72befd13774e5d602ae80375e41`
 - **Source:** https://github.com/potassco/tree-sitter-clingo
 - **License:** MIT (see `LICENSE` in this directory)
-- **Vendored:** 2026-06-15, for kallos (design spec §14 — the grammar of record).
+- **Vendored:** 2026-06-15, for kallos.
 
 This is kallos's **grammar of record**: every grammar-grounded surface-syntax
-claim in the spec and the engineering-session contributions is auditable against
-the files here.
+claim is auditable against the files here.
 
 Do **not** hand-edit the generated artifacts (`src/parser.c`, `src/scanner.c`,
 `src/grammar.json`, `src/node-types.json`). `grammar.js` is the source they are
